@@ -12,6 +12,8 @@
       <span v-if="isLoggedIn()">
         <router-link :to="`/users/${getUserId()}`">My Gear</router-link>
         |
+        <router-link :to="`/users/${getUserId()}/edit`">Edit Profile</router-link>
+        |
         <router-link to="/logout">Logout</router-link>
         |
       </span>
