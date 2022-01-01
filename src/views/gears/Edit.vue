@@ -1,12 +1,18 @@
 <template>
   <div class="gears-edit">
+    <h1>Edit Gear</h1>
+    <ul>
+      <li class="text-danger" v-for="error in errors" v-bind:key="error">
+        {{ error }}
+      </li>
+    </ul>
+    <div v-for="image in editGearParams.images" v-bind:key="image.id">
+      <img :src="image.photo_url" />
+      <button v-on:click="destroyImage(image)">Delete Photo</button>
+    </div>
+    <input type="text" v-model="newImageParams.photo_url" />
+    <button v-on:click="createImage()">Add Photo</button>
     <form v-on:submit.prevent="updateGear()">
-      <h1>Edit Gear</h1>
-      <ul>
-        <li class="text-danger" v-for="error in errors" v-bind:key="error">
-          {{ error }}
-        </li>
-      </ul>
       <div class="form-group">
         <label>Category:</label>
         <input type="text" class="form-control" v-model="editGearParams.category" placeholder="Category" />
@@ -64,15 +70,19 @@ export default {
     return {
       editGearParams: {},
       errors: {},
+      newImageParams: {},
     };
   },
   created: function () {
-    axios.get(`gears/${this.$route.params.id}`).then((response) => {
-      console.log("Gear Object", response.data);
-      this.editGearParams = response.data;
-    });
+    this.setEditGearParams();
   },
   methods: {
+    setEditGearParams: function () {
+      axios.get(`gears/${this.$route.params.id}`).then((response) => {
+        console.log("Gear Object", response.data);
+        this.editGearParams = response.data;
+      });
+    },
     updateGear: function () {
       axios.patch(`gears/${this.editGearParams.id}`, this.editGearParams).then((response) => {
         console.log("Edit User", response.data);
@@ -85,6 +95,34 @@ export default {
           console.log(response.data);
           this.$router.push(`/users/${this.editGearParams.user_id}`);
         });
+    },
+    createImage: function () {
+      let params = {
+        gear_id: this.editGearParams.id,
+        photo_url: this.newImageParams.photo_url,
+      };
+      axios
+        .post("/images", params)
+        .then((response) => {
+          console.log(response.data);
+          this.editGearParams.images.push(response.data);
+          this.newImageParams.photo_url = "";
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    destroyImage: function (image) {
+      if (confirm("Confirm Delete Image?")) {
+        axios.delete(`/images/${image.id}`).then((response) => {
+          console.log(response.data);
+          for (var i = 0; i < this.editGearParams.images.length; i++) {
+            if (this.editGearParams.images[i] === image) {
+              this.editGearParams.images.splice(i, 1);
+            }
+          }
+        });
+      }
     },
   },
 };
