@@ -6,6 +6,7 @@ import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import UsersShow from "../views/users/Show.vue";
 import UsersEdit from "../views/users/Edit.vue";
+import GearsNew from "../views/gears/New.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,11 @@ const routes = [
     path: "/users/:id/edit",
     name: "users-edit",
     component: UsersEdit,
+  },
+  {
+    path: "/gears/new",
+    name: "gears-new",
+    component: GearsNew,
   },
 ];
 
