@@ -7,6 +7,7 @@
         {{ gear.category }} {{ gear.make }} {{ gear.model }} {{ gear.color }} {{ gear.serial_number }}
         {{ gear.other_info }} {{ gear.registered }} {{ gear.missing }}
       </p>
+      <router-link :to="`/gears/${gear.id}/edit`">Edit Gear</router-link>
     </div>
     <router-link to="/gears/new">Add Gear</router-link>
   </div>

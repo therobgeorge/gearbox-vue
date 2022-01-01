@@ -28,8 +28,8 @@
         <input type="password" class="form-control" v-model="editUserParams.password_confirmation" />
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
-      <button v-on:click="destroyUser()">Delete Profile</button>
     </form>
+    <button v-on:click="destroyUser()">Delete Profile</button>
   </div>
 </template>
 
