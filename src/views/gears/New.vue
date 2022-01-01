@@ -59,7 +59,7 @@ export default {
   data: function () {
     return {
       user: {},
-      newGearParams: { user_id: `${this.currentUserId}` },
+      newGearParams: { user_id: `${this.currentUserId}`, registered: false },
       errors: {},
       currentUserId: "",
       newImageParams: {},
@@ -77,6 +77,16 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.$router.push(`/users/${this.currentUserId}`);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+    createImage: function () {
+      axios
+        .post("/images", this.newImageParams)
+        .then((response) => {
+          console.log(response.data);
         })
         .catch((error) => {
           this.errors = error.response.data.errors;

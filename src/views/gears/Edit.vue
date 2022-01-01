@@ -80,7 +80,7 @@ export default {
       });
     },
     destroyGear: function () {
-      if (confirm("Confirm Delete Your Profile"))
+      if (confirm("Confirm Delete Gear"))
         axios.delete(`gears/${this.editGearParams.id}`).then((response) => {
           console.log(response.data);
           this.$router.push(`/users/${this.editGearParams.user_id}`);
