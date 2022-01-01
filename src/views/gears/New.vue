@@ -8,8 +8,8 @@
         </li>
       </ul>
       <div class="form-group">
-        <label>Type:</label>
-        <input type="text" class="form-control" v-model="newGearParams.type" placeholder="Type" />
+        <label>Category:</label>
+        <input type="text" class="form-control" v-model="newGearParams.category" placeholder="Category" />
       </div>
       <div class="form-group">
         <label>Make:</label>
@@ -29,7 +29,10 @@
       </div>
       <div class="form-group">
         <label>Regestered With Manufacturer:</label>
-        <input type="checkbox" class="form-control" v-model="newGearParams.registered" value="true" />
+        <select name="registered" v-model="newGearParams.registered">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Other Identifying Information:</label>
