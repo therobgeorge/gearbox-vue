@@ -45,7 +45,7 @@
       </div>
       <div class="form-group">
         <label>Photo:</label>
-        <input type="text" class="form-control" v-model="newImageParams.photo_url" placeholder="pics" />
+        <input type="file" v-on:change="setFile($event)" ref="fileInput" />
       </div>
       <input type="submit" class="btn btn-primary" value="Submit" />
     </form>
@@ -62,7 +62,8 @@ export default {
       newGearParams: { user_id: `${this.currentUserId}`, registered: false },
       errors: {},
       currentUserId: "",
-      newImageParams: {},
+      photo_url: "",
+      newGearId: "",
     };
   },
   created: function () {
@@ -76,13 +77,34 @@ export default {
         .post(`/gears`, this.newGearParams)
         .then((response) => {
           console.log(response.data);
-          this.$router.push(`/users/${this.currentUserId}`);
+          this.newGearId = response.data.id;
+          if (this.photo_url != "") {
+            this.createImage(this.newGearId);
+            this.$router.push(`/users/${this.currentUserId}`);
+          } else {
+            this.$router.push(`/users/${this.currentUserId}`);
+          }
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
         });
     },
-    createImage: function () {
+    setFile: function (event) {
+      if (event.target.files.length > 0) {
+        this.photo_url = event.target.files[0];
+      }
+    },
+    createImage: function (gear_id) {
+      let formData = new FormData();
+      formData.append("gear_id", gear_id), formData.append("photo_url", this.photo_url);
+      axios
+        .post("/images", formData)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
       axios
         .post("/images", this.newImageParams)
         .then((response) => {
