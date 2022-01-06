@@ -39,7 +39,7 @@
         <textarea
           cols="30"
           rows="10"
-          v-model="newGearParams.comment"
+          v-model="newGearParams.other_info"
           placeholder="Does it have stickers? Scratches? Anything else?"
         ></textarea>
       </div>
