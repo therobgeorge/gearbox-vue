@@ -10,7 +10,7 @@
       <img :src="image.photo_url" />
       <button v-on:click="destroyImage(image)">Delete Photo</button>
     </div>
-    <input type="text" v-model="newImageParams.photo_url" />
+    <input type="file" v-on:change="setFile($event)" ref="fileInput" />
     <button v-on:click="createImage()">Add Photo</button>
     <form v-on:submit.prevent="updateGear()">
       <div class="form-group">
@@ -71,12 +71,18 @@ export default {
       editGearParams: {},
       errors: {},
       newImageParams: {},
+      photo_url: "",
     };
   },
   created: function () {
     this.setEditGearParams();
   },
   methods: {
+    setFile: function (event) {
+      if (event.target.files.length > 0) {
+        this.photo_url = event.target.files[0];
+      }
+    },
     setEditGearParams: function () {
       axios.get(`gears/${this.$route.params.id}`).then((response) => {
         console.log("Gear Object", response.data);
@@ -97,16 +103,14 @@ export default {
         });
     },
     createImage: function () {
-      let params = {
-        gear_id: this.editGearParams.id,
-        photo_url: this.newImageParams.photo_url,
-      };
+      let formData = new FormData();
+      formData.append("gear_id", this.editGearParams.id), formData.append("photo_url", this.photo_url);
       axios
-        .post("/images", params)
+        .post("/images", formData)
         .then((response) => {
           console.log(response.data);
           this.editGearParams.images.push(response.data);
-          this.newImageParams.photo_url = "";
+          this.photo_url = "";
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
