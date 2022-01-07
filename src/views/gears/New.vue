@@ -39,7 +39,7 @@
         <textarea
           cols="30"
           rows="10"
-          v-model="newGearParams.other_info"
+          v-model="newGearParams.other"
           placeholder="Does it have stickers? Scratches? Anything else?"
         ></textarea>
       </div>
@@ -62,7 +62,7 @@ export default {
       newGearParams: { user_id: `${this.currentUserId}`, registered: false },
       errors: {},
       currentUserId: "",
-      photo_url: "",
+      photo: "",
       newGearId: "",
     };
   },
@@ -79,7 +79,7 @@ export default {
           console.log(response.data);
           this.newGearId = response.data.id;
           if (this.photo_url != "") {
-            this.createImage(this.newGearId);
+            // this.createImage(this.newGearId);
             this.$router.push(`/users/${this.currentUserId}`);
           } else {
             this.$router.push(`/users/${this.currentUserId}`);
@@ -91,29 +91,35 @@ export default {
     },
     setFile: function (event) {
       if (event.target.files.length > 0) {
-        this.photo_url = event.target.files[0];
+        const selectedImage = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.newGearParams["image_base64"] = reader.result;
+          console.log(reader.result);
+        };
+        reader.readAsDataURL(selectedImage);
       }
     },
-    createImage: function (gear_id) {
-      let formData = new FormData();
-      formData.append("gear_id", gear_id), formData.append("photo_url", this.photo_url);
-      axios
-        .post("/images", formData)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
-      axios
-        .post("/images", this.newImageParams)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          this.errors = error.response.data.errors;
-        });
-    },
+    // createImage: function (gear_id) {
+    //   let formData = new FormData();
+    //   formData.append("gear_id", gear_id), formData.append("photo_url", this.photo_url);
+    //   axios
+    //     .post("/images", formData)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //     })
+    //     .catch((error) => {
+    //       this.errors = error.response.data.errors;
+    //     });
+    //   axios
+    //     .post("/images", this.newImageParams)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //     })
+    //     .catch((error) => {
+    //       this.errors = error.response.data.errors;
+    //     });
+    // },
   },
 };
 </script>
